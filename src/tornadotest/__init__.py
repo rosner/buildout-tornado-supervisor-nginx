@@ -10,6 +10,7 @@ from .handlers import MainHandler
 define('port', default=8000, help='run on the given port', type=int)
 define('host', default='127.0.0.1', help='The host')
 define('debug', default=False, type=bool)
+define('log_config', default='logging.cfg', help='The logging config file')
 
 def log_request(handler):
     if handler.get_status() < 400:
@@ -24,8 +25,10 @@ def log_request(handler):
 
 def start_service():
     parse_command_line()
-    logging.info('Starting Tornado web server on http://localhost:%s', 
-            options.port)
+    logging.config.fileConfig(options.log_config)
+
+    logging.info('Starting Tornado web server on http://%s:%s', 
+            options.host, options.port)
 
     settings = {
         'debug': options.debug,
